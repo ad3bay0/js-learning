@@ -1,35 +1,112 @@
 //tip calculator object
 
-var tipObj = {
+var johnTipObj = {
+  firstName: 'John',
     bills: [124, 48, 268, 180, 42],
     tips: [],
     billTotal: [],
     calTip: function () {
-        
+
         for (var i=0;i<this.bills.length;i++){
+
+          var percentage;
+          var bill = this.bills[i];
             
-            if(this.bills[i]<50){
+            if(bill<50){
                 
-              this.tips.push(this.bills[i]*0.2);
-              this.billTotal.push(this.bills[i]+(this.bills[i]*0.2))
+             percentage = .2;
                
                }
-            else if(this.bills[i]>=50 || this.bills[i]<=200 ){
+            else if(bill>=50 && bill<200 ){
             
-            this.tips.push(this.bills[i]*0.15);
-            this.billTotal.push(this.bills[i]+(this.bills[i]*0.15))
+              percentage = .15;
                 
             }else{
                 
-              this.tips.push(this.bills[i]*0.1);  
-              this.billTotal.push(this.bills[i]+(this.bills[i]*0.1))
+              percentage = .1;
             }
+
+            this.tips.push(bill*percentage);
+            this.billTotal.push(bill+(bill*percentage))
         }
-        
-        return this.tips;
-        
     }
 };
 
-console.log(tipObj.calTip());
-console.log(tipObj.billTotal);
+
+var markTipObj = {
+
+  firstName: 'Mark',
+  bills: [77, 475, 110, 45],
+  tips: [],
+  billTotal: [],
+  calTip: function () {
+
+    for (var i=0;i<this.bills.length;i++){
+
+      var percentage;
+      var bill = this.bills[i];
+        
+        if(bill<100){
+            
+         percentage = .2;
+           
+           }
+        else if(bill>=100 && bill<300 ){
+        
+          percentage = .1;
+            
+        }else{
+            
+          percentage = .25;
+        }
+
+        this.tips.push(bill*percentage);
+        this.billTotal.push(bill+(bill*percentage))
+    }
+}
+};
+
+
+johnTipObj.calTip();
+
+
+markTipObj.calTip();
+
+
+//calculate the average tip for each family and who paid highest tips
+
+function calculateAverageTip (arrayOfTips){
+
+  var sizeOfTips = arrayOfTips.length;
+  var sumOfTips = 0;
+
+  for(var i = 0;i<sizeOfTips;i++){
+
+    sumOfTips = arrayOfTips[i]+sumOfTips;
+
+  }
+
+  return sumOfTips/sizeOfTips;
+
+
+}
+
+var avergaOfMarkFamilyTip =  calculateAverageTip(markTipObj.tips);
+var avergaOfJohnFamilyTip =  calculateAverageTip(johnTipObj.tips);
+
+console.log('john average tip: '+avergaOfJohnFamilyTip+' -> '+johnTipObj.tips);
+console.log('mark average tip: '+avergaOfMarkFamilyTip+' -> '+markTipObj.tips);
+
+if(avergaOfJohnFamilyTip > avergaOfMarkFamilyTip){
+
+  console.log('John\'s family paid higher tips' );
+
+}else if(avergaOfMarkFamilyTip > avergaOfJohnFamilyTip){
+
+  console.log('Mark\'s family paid higher tips' );
+
+}else{
+
+ console.log('Both family paid same tip average');
+}
+
