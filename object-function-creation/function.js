@@ -22,9 +22,9 @@ function calculateAge(vl){
     return 2018 - vl;
 }
 
-function isFullAge(vl){
+function isFullAge(limit,vl){
 
-    return vl >= 18;
+    return vl >= limit;
 
 
 }
@@ -143,3 +143,59 @@ console.log((retirementAge - age)+a);
 
  //closureInterviewFunct('dj')('bayo');
 
+ //bind, call and apply
+
+ var john = {
+name: 'John',
+age: 29,
+job:'teacher',
+presentation: function(style,timeOfDay){
+
+    if(style === 'formal'){
+
+        console.log('Good '+
+        timeOfDay+' ladies and gentlemen I\'m '+
+        this.name+ ' a '+
+        this.job+' and I\m '+
+        this.age+' years old.');
+
+    }else if(style === 'friendly'){
+
+console.log('Hey whats up! I\'m '+
+this.name+ ' a '+
+this.job+' and I\m '+
+this.age+' years old.');
+    }
+
+
+}
+
+
+ };
+
+
+ var emily = {
+    name: 'Emily',
+    age: 24,
+    job:'Designer'};
+
+    john.presentation.call(emily,'formal','morning');
+
+
+    var johnFriendly = john.presentation.bind(john,'friendly');
+
+    johnFriendly('afternoon');
+
+    var emilyFormal = john.presentation.bind(emily,'formal');
+
+emilyFormal('Evening');
+
+//bind example is used to set preddefined parameters for a function
+
+
+var bindAges =  arrayCalc(years,calculateAge);
+
+var isFullAgeJapan = arrayCalc(bindAges,isFullAge.bind(this,20));
+
+console.log(bindAges);
+console.log(isFullAgeJapan);
