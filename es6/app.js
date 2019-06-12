@@ -125,6 +125,10 @@ const all = [h,...bx];
 
 Array.from(all).forEach(el=>el.style.color='purple');
 
+//TODO REST PARAMETERS(OPPOSITE OF SPREA OPERATOR)
+
+//DEFAULT PARAMETERS
+
 
 
 
