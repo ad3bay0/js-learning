@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    </meta>
+    <title>Aysnc Tuts</title>
+</head>
+
+<body>
+
+    <script>
+        //async example
+        /*const second = ()=>{
+     
+     console.log('second run');
+     
+     setTimeout(()=>{
+     
+         console.log('assync done');
+     
+     },7000);
+     
+     };
+         
+         const first = ()=>{
+     
+             console.log('first run');
+     
+             second();
+     
+         };
+     
+         first();*/
+
+        //async old ways with call back hell
+
+        /*const getRecipe = ()=>{
+            
+            setTimeout(() => {
+    
+                const recipeIds = [0,1,2,3,4,5,6];
+    
+                console.log(recipeIds);
+    
+                setTimeout(id => {
+    
+                    const recipe = [{desc:'Tomatoes spice',author:'John'},{desc:'macaroni spice',author:'Martin'}];
+    
+                    console.log(`id: ${id} recipe details: ${recipe[id].author}`);
+    
+                    setTimeout(author => {
+    
+                        console.log(author);
+                        
+                    }, 2000,recipe[id].author)
+    
+                    
+                }, 2000,recipeIds[0]);
+                
+            }, 2000);
+    
+        }
+    
+        getRecipe();*/
+
+        //counter call back hell with Promise
+
+        //promise to get recipe Ids
+        const getIds = new Promise((resolve, reject) => {
+
+            setInterval(() => {
+
+                const recipeIds = [1, 2, 3, 4, 5, 6];
+
+                resolve(recipeIds);
+
+            }, 1000);
+        });
+
+        //generate promise to retrieve recipe by ID
+        const getRecipe = id => {
+
+            return new Promise((resolve, reject) => {
+
+                setTimeout((param) => {
+
+                    const recipes = [{ author: 'John', desc: 'John Recipe' }, { author: 'Martin', desc: 'Martin Recipe' }];
+
+                    resolve(recipes[param]);
+
+                }, 1000, id);
+            });
+        };
+
+        const getRelatedRecipeByAuthor = author => {
+
+            return new Promise((resolve, reject) => {
+                setTimeout((auth) => {
+
+                    const relRecipes = new Map();
+                    relRecipes.set('John', 'John Recipe related');
+                    relRecipes.set('Martin', 'Martin Recipe related');
+                    relRecipes.set('Brad', 'Brad Recipe related');
+
+                    resolve(relRecipes.get(auth));
+
+                }, 1000, author);
+
+
+            });
+
+        };
+
+        //es6 promise consumption
+        /*getIds.then((IDS) => {
+
+            console.log(IDS);
+
+            //use an id to retrieve a recipe and return a promise
+
+            return getRecipe(IDS[0]);
+
+        }).then(recipe => {
+
+            console.log(recipe.author);
+            //use recipe author name to recieve similar recipe by this author
+            return getRelatedRecipeByAuthor(recipe.author);
+
+
+
+        }).then(relatedrecipe => {
+
+            console.log(relatedrecipe);
+        });*/
+
+        //es8 promise cosumption using async/await
+
+        async function getRecipeAWS() {
+
+            const ids = await getIds;
+            console.log(ids);
+            const recipe = await getRecipe(ids[0]);
+            console.log(recipe);
+            const relatedrecipe = await getRelatedRecipeByAuthor(recipe.author);
+            console.log(relatedrecipe);
+
+            return recipe;
+
+        }
+
+        //getRecipeAWS().then(recipe=>console.log(recipe));
+
+        const apiTest = (url) => {
+
+            return fetch(url).then(result => {
+
+                return result.json();
+
+            }).then(js => console.log(js)).catch(error => {
+
+                console.log(`error: ${error}`);
+
+            });
+        }
+
+        //apiTest('http://dummy.restapiexample.com/api/v1/employees');
+
+        async function apiTestAws(endpoint) {
+
+          try{
+
+            const result = await fetch(`http://dummy.restapiexample.com/api/v1/${endpoint}`);
+            const jsonResp = await result.json();
+            return  jsonResp;
+          }catch(error){
+
+            console.log(`error occured: ${error}`);
+          }
+
+        }
+
+        apiTestAws('employees').then(rs=>console.log(rs));
+
+    </script>
+
+</body>
+
+</html>
