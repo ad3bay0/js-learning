@@ -1,7 +1,9 @@
 // Global app controller
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import * as searchView from './views/searchView';
-import { elements,renderLoader,clearLoader } from './views/base';
+import * as recipeView from './views/recipeView';
+import { elements, renderLoader, clearLoader } from './views/base';
 
 /**
  * Global state of the app
@@ -14,16 +16,22 @@ import { elements,renderLoader,clearLoader } from './views/base';
 const state = {};
 
 /**
- * search control
+ * recipe controller
+ */
+
+
+/**
+ * search controller
  */
 const searchControl = async () => {
 
-    try {
+    
         //get query from view
         const query = searchView.getSearchInput();
-        console.log(query);
 
         if (query) {
+
+           try {
 
             state.search = new Search(query);
             searchView.clearInput();
@@ -32,12 +40,13 @@ const searchControl = async () => {
             await state.search.getResult();
             clearLoader();
             searchView.renderResults(state.search.result);
+               
+           } catch (error) {
+
+            console.log(`searchControl ${error}`);
+           }
         }
-    } catch (error) {
-
-        console.log(`error index.js: ${error}`)
-
-    }
+   
 
 
 }
@@ -51,14 +60,47 @@ elements.searchForm.addEventListener('submit', e => {
 });
 
 
-elements.searchResPages.addEventListener('click',e=>{
+elements.searchResPages.addEventListener('click', e => {
 
     const btn = e.target.closest('.btn-inline');
 
-    if(btn){
+    if (btn) {
 
-        const goToPage = parseInt(btn.dataset.goto,10);
-searchView.clearResult();
-        searchView.renderResults(state.search.result,goToPage);
+        const goToPage = parseInt(btn.dataset.goto, 10);
+        searchView.clearResult();
+        searchView.renderResults(state.search.result, goToPage);
     }
 });
+
+const controlRecipe = async () => {
+
+    const id = window.location.hash.replace('#', '');
+
+    if (id) {
+
+       
+        if(state.search) searchView.highlightSelected(id);
+
+         try {
+
+            state.recipe = new Recipe(id);
+            recipeView.clearRecipe();
+            renderLoader(elements.recipeDiv);
+            await state.recipe.getRecipe();
+            clearLoader();
+            state.recipe.parseIngredients();
+            state.recipe.calcTime();
+            state.recipe.calcServings();
+            recipeView.renderRecipe(state.recipe);
+             
+         } catch (error) {
+             
+            console.log(`controlRecipe:  ${error}`)
+         }
+
+
+       
+    }
+
+};
+['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));

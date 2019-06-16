@@ -11,6 +11,13 @@ export const clearResult = () => {
     elements.searchResPages.innerHTML = '';
 };
 
+export const highlightSelected = id=>{
+
+     Array.from(document.querySelectorAll('.results__link')).forEach(el=>el.classList.remove('results__link--active'));
+    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+
+};
+
 //type: prev or next
 const createButton = (page, type) => `
 <button class="btn-inline results__btn--${type}" data-goto=${type === 'prev' ? page - 1 : page + 1}>
