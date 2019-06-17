@@ -2,6 +2,7 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import List from './models/List';
+import Likes from './models/Likes';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
@@ -138,6 +139,34 @@ const  controlList = ()=>{
 
 }
 
+//like controller
+const  controlRecipeLike= ()=>{
+
+    if(!state.likes) state.likes = new Likes();
+
+    const currentId = state.recipe.id;
+
+    if(!state.likes.isLike(currentId)){
+
+        const newLike = state.likes.addLike(
+            currentId,
+            state.recipe.title,
+            state.recipe.author,
+            state.recipe.img
+        );
+
+        console.log(state.likes);
+
+    }else{
+
+
+        state.likes.deleteLike(currentId);
+        console.log(state.likes);
+    }
+
+
+}
+
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
 //handling recipe button click
@@ -159,6 +188,10 @@ elements.recipeDiv.addEventListener('click', e => {
     
        controlList();
     }
+    else if (e.target.matches('.recipe__love, .recipe__love *')) {
+    
+           controlRecipeLike();
+     }
 
    
 
